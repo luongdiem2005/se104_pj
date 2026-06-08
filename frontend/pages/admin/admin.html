@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduFee - Hệ thống Quản trị Tối cao (System Administrator)</title>
+    <title>EduFee - Hệ thống Quản trị</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -269,7 +269,7 @@
         <div class="main-wrapper">
             <header class="main-header">
                 <div class="header-title">
-                    <h1>Hệ thống Quản trị & Phân quyền Tối cao</h1>
+                    <h1>Hệ thống Quản trị và Phân quyền</h1>
                 </div>
                 <div class="header-actions">
                     <button id="btnLogout" class="btn-logout" style="background: #e53e3e; color: white; border-color: #e53e3e;">
@@ -319,7 +319,7 @@
                         <i class="ti ti-users"></i> Quản lý Tài khoản
                     </button>
                     <button class="admin-tab-btn" data-tab="tab-phanquyen">
-                        <i class="ti ti-shield-check"></i> Phân Quyền (RBAC)
+                        <i class="ti ti-shield-check"></i> Phân Quyền
                     </button>
                     <button class="admin-tab-btn" data-tab="tab-params">
                         <i class="ti ti-settings"></i> Tham số Hệ thống
@@ -333,7 +333,7 @@
                         <div class="available-section" style="margin-top: 0;">
                             <div class="table-toolbar" style="padding: 0; margin-bottom: 12px;">
                                 <h2 style="font-size: 15px; color: #2d3748; font-weight: 600;">
-                                    Danh sách tài khoản nội bộ (RBAC Ledger)
+                                    Danh sách tài khoản nội bộ
                                 </h2>
                             </div>
 
@@ -479,15 +479,15 @@
                                 <div class="form-inline-row">
                                     <div>
                                         <label>Mã chức năng</label>
-                                        <input id="cnMa" class="form-select" style="width:130px;" placeholder="VD: QL_SV">
+                                        <input id="cnMa" class="form-select" style="width:130px;" placeholder="">
                                     </div>
                                     <div>
                                         <label>Tên chức năng</label>
-                                        <input id="cnTen" class="form-select" style="width:200px;" placeholder="Quản lý Sinh viên">
+                                        <input id="cnTen" class="form-select" style="width:200px;" placeholder="">
                                     </div>
                                     <div>
-                                        <label>Màn hình (file .html)</label>
-                                        <input id="cnManHinh" class="form-select" style="width:180px;" placeholder="pdt_sv.html">
+                                        <label>Màn hình</label>
+                                        <input id="cnManHinh" class="form-select" style="width:180px;" placeholder="">
                                     </div>
                                     <div style="display:flex;align-items:flex-end;">
                                         <button id="btnAddChucNang" class="btn btn-primary" style="height:36px;">
@@ -518,17 +518,17 @@
                             <!-- Nhóm người dùng -->
                             <div class="pq-section-card">
                                 <div class="pq-section-header">
-                                    <h3><i class="ti ti-users-group"></i> Nhóm Người dùng (NHOMNGUOIDUNG)</h3>
+                                    <h3><i class="ti ti-users-group"></i> Nhóm Người dùng</h3>
                                 </div>
                                 <div class="pq-section-body">
                                     <div class="form-inline-row">
                                         <div>
                                             <label>Mã nhóm</label>
-                                            <input id="nhMa" class="form-select" style="width:100px;" placeholder="PDT">
+                                            <input id="nhMa" class="form-select" style="width:100px;" placeholder="">
                                         </div>
                                         <div>
                                             <label>Tên nhóm</label>
-                                            <input id="nhTen" class="form-select" style="width:190px;" placeholder="Phòng Đào tạo">
+                                            <input id="nhTen" class="form-select" style="width:190px;" placeholder="">
                                         </div>
                                         <div style="display:flex;align-items:flex-end;">
                                             <button id="btnAddNhom" class="btn btn-primary" style="height:36px;">
@@ -554,17 +554,17 @@
                             <!-- Cấp quyền thủ công -->
                             <div class="pq-section-card">
                                 <div class="pq-section-header">
-                                    <h3><i class="ti ti-key"></i> Cấp Quyền thủ công (BANGPHANQUYEN)</h3>
+                                    <h3><i class="ti ti-key"></i> Cấp Quyền thủ công</h3>
                                 </div>
                                 <div class="pq-section-body">
                                     <p style="font-size:12px;color:#718096;margin-bottom:10px;">
-                                        <i class="ti ti-info-circle"></i> Cấp nhanh toàn quyền Thêm/Xóa/Sửa. Để tùy chỉnh từng quyền, dùng tab <strong>Bảng Phân quyền</strong>.
+                                        <i class="ti ti-info-circle"></i> Cấp nhanh toàn quyền Thêm/Xóa/Sửa</strong>.
                                     </p>
                                     <div class="form-inline-row">
                                         <div>
                                             <label>Nhóm</label>
                                             <select id="pqNhom" class="form-select" style="width:120px;">
-                                                <option value="">-- chọn --</option>
+                                                <option value="">-- Chọn --</option>
                                             </select>
                                         </div>
                                         <div>
@@ -602,7 +602,7 @@
                 <div id="tab-params" class="admin-tab-panel">
                     <div class="pq-section-card">
                         <div class="pq-section-header">
-                            <h3><i class="ti ti-adjustments-horizontal"></i> Tham số Hệ thống (THAMSO)</h3>
+                            <h3><i class="ti ti-adjustments-horizontal"></i> Tham số Hệ thống</h3>
                             <button id="btnAddParam" class="btn btn-primary" style="font-size:12px;padding:6px 12px;">
                                 <i class="ti ti-plus"></i> Thêm tham số
                             </button>
@@ -612,7 +612,7 @@
                             <div class="form-inline-row" id="paramFormRow" style="display:none;">
                                 <div>
                                     <label>Tên tham số</label>
-                                    <input id="paramTen" class="form-select" style="width:200px;" placeholder="VD: TyLeMienGiamToiDa">
+                                    <input id="paramTen" class="form-select" style="width:200px;" placeholder="">
                                 </div>
                                 <div>
                                     <label>Giá trị</label>
