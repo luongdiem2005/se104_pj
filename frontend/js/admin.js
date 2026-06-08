@@ -41,6 +41,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  // Sub-tabs trong tab phân quyền
+  document.querySelectorAll('.pq-sub-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pq-sub-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.pq-sub-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const target = $(btn.dataset.pqtab);
+      if (target) target.classList.add('active');
+    });
+  });
+
   /* ================================================================
    *  TAB 1 — QUẢN LÝ TÀI KHOẢN
    * ================================================================ */
@@ -159,6 +170,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderPhanQuyen();
     renderMatrix();
     renderSummary();
+    // Cập nhật KPI trong tab phân quyền
+    const kNhom = $('kpiNhomCount'); if (kNhom) kNhom.textContent = rbac.nhom.length;
+    const kCN   = $('kpiCNCount');   if (kCN)   kCN.textContent   = rbac.chucNang.length;
+    const kPQ   = $('kpiPQCount');   if (kPQ)   kPQ.textContent   = rbac.phanQuyen.length;
   }
   // Giữ tên cũ để phần KHỞI TẠO vẫn gọi được.
   async function refreshPQ() { await reloadRBAC(); }

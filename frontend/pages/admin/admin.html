@@ -384,98 +384,137 @@
                 <!-- ======================== TAB 2: PHÂN QUYỀN ======================== -->
                 <div id="tab-phanquyen" class="admin-tab-panel">
 
-                    <!-- Ma trận quyền theo vai trò (có thể tick Thêm/Xóa/Sửa) -->
-                    <div class="pq-section-card" style="margin-bottom:20px;">
-                        <div class="pq-section-header">
-                            <h3><i class="ti ti-table"></i> Ma trận Phân quyền theo Vai trò — tick Thêm / Xóa / Sửa</h3>
-                            <span style="font-size:11px;color:#718096;">Tick để cấp quyền, bỏ tick cả 3 để thu hồi (tự động lưu)</span>
+                    <!-- Thống kê nhanh -->
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;">
+                        <div class="kpi-card-admin" style="border-left:4px solid #e53e3e;">
+                            <div><span>Nhóm người dùng</span><h3 id="kpiNhomCount">—</h3></div>
+                            <i class="ti ti-users-group" style="font-size:22px;color:#e53e3e;"></i>
                         </div>
-                        <div class="pq-section-body" style="overflow-x:auto;">
-                            <table class="matrix-table" id="matrixTable">
-                                <thead id="matrixHead"></thead>
-                                <tbody id="matrixBody"></tbody>
-                            </table>
+                        <div class="kpi-card-admin" style="border-left:4px solid #3182ce;">
+                            <div><span>Chức năng hệ thống</span><h3 id="kpiCNCount">—</h3></div>
+                            <i class="ti ti-layout-grid" style="font-size:22px;color:#3182ce;"></i>
                         </div>
-                    </div>
-
-                    <!-- Bảng tổng hợp các chức năng -->
-                    <div class="pq-section-card" style="margin-bottom:20px;">
-                        <div class="pq-section-header">
-                            <h3><i class="ti ti-list-check"></i> Bảng tổng hợp Chức năng &amp; Quyền theo Vai trò</h3>
-                            <span style="font-size:11px;color:#718096;" id="lblSummaryTotal">0 chức năng</span>
-                        </div>
-                        <div class="pq-section-body" style="overflow-x:auto;">
-                            <table class="matrix-table" id="summaryTable">
-                                <thead>
-                                    <tr>
-                                        <th style="min-width:60px;">Mã CN</th>
-                                        <th style="min-width:180px;">Tên chức năng</th>
-                                        <th style="min-width:120px;">Màn hình</th>
-                                        <th class="text-center"><span class="badge-admin">ADMIN</span></th>
-                                        <th class="text-center"><span class="badge-pdt">PDT</span></th>
-                                        <th class="text-center"><span class="badge-ptc">PTC</span></th>
-                                        <th class="text-center"><span class="badge-sv">SV</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="summaryBody"></tbody>
-                            </table>
-                            <p style="font-size:11px;color:#a0aec0;margin-top:8px;">
-                                Chú thích: <span class="perm-chip on">T</span> Thêm ·
-                                <span class="perm-chip on">X</span> Xóa ·
-                                <span class="perm-chip on">S</span> Sửa — ô tô xanh nghĩa là có quyền.
-                            </p>
+                        <div class="kpi-card-admin" style="border-left:4px solid #38a169;">
+                            <div><span>Số mục phân quyền</span><h3 id="kpiPQCount">—</h3></div>
+                            <i class="ti ti-shield-check" style="font-size:22px;color:#38a169;"></i>
                         </div>
                     </div>
 
-                    <div class="pq-workspace">
-                        <!-- Cột trái: Chức năng hệ thống -->
-                        <div>
-                            <div class="pq-section-card">
-                                <div class="pq-section-header">
-                                    <h3><i class="ti ti-layout-grid"></i> Danh sách Chức năng (CHUCNANG)</h3>
-                                    <span style="font-size:11px;color:#718096;" id="lblChucNangTotal">0 chức năng</span>
-                                </div>
-                                <div class="pq-section-body">
-                                    <!-- Form thêm chức năng -->
-                                    <div class="form-inline-row">
-                                        <div>
-                                            <label>Mã chức năng</label>
-                                            <input id="cnMa" class="form-select" style="width:120px;" placeholder="VD: QL_SV">
-                                        </div>
-                                        <div>
-                                            <label>Tên chức năng</label>
-                                            <input id="cnTen" class="form-select" style="width:160px;" placeholder="Quản lý Sinh viên">
-                                        </div>
-                                        <div>
-                                            <label>Màn hình (file)</label>
-                                            <input id="cnManHinh" class="form-select" style="width:160px;" placeholder="pdt_sv.html">
-                                        </div>
-                                        <div style="display:flex;align-items:flex-end;">
-                                            <button id="btnAddChucNang" class="btn btn-primary" style="height:36px;">
-                                                <i class="ti ti-plus"></i> Thêm
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="table-container" style="margin:0;">
-                                        <table class="data-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Mã CN</th>
-                                                    <th>Tên chức năng</th>
-                                                    <th>Màn hình</th>
-                                                    <th style="width:50px;"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="chucNangBody"></tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                    <!-- Sub-tabs phân quyền -->
+                    <div style="display:flex;gap:2px;border-bottom:2px solid #e2e8f0;margin-bottom:20px;">
+                        <button class="pq-sub-tab active" data-pqtab="pqt-matrix" style="padding:9px 18px;border:none;background:none;font-size:13px;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;border-radius:6px 6px 0 0;transition:all .2s;display:flex;align-items:center;gap:6px;">
+                            <i class="ti ti-table"></i> Bảng Phân quyền
+                        </button>
+                        <button class="pq-sub-tab" data-pqtab="pqt-chucnang" style="padding:9px 18px;border:none;background:none;font-size:13px;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;border-radius:6px 6px 0 0;transition:all .2s;display:flex;align-items:center;gap:6px;">
+                            <i class="ti ti-layout-grid"></i> Chức năng hệ thống
+                        </button>
+                        <button class="pq-sub-tab" data-pqtab="pqt-nhom" style="padding:9px 18px;border:none;background:none;font-size:13px;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;border-radius:6px 6px 0 0;transition:all .2s;display:flex;align-items:center;gap:6px;">
+                            <i class="ti ti-users-group"></i> Nhóm người dùng
+                        </button>
+                    </div>
+
+                    <style>
+                        .pq-sub-tab.active { color:#e53e3e!important; border-bottom-color:#e53e3e!important; background:#fff5f5!important; }
+                        .pq-sub-panel { display:none; }
+                        .pq-sub-panel.active { display:block; }
+                        /* Ma trận checkbox cải thiện */
+                        .perm-group label { padding:3px 5px; border-radius:4px; transition:background .1s; }
+                        .perm-group label:hover { background:#f7fafc; }
+                        .perm-group label.on { background:#fff5f5; color:#c53030; }
+                    </style>
+
+                    <!-- Sub-panel 1: Bảng phân quyền (ma trận) -->
+                    <div id="pqt-matrix" class="pq-sub-panel active">
+                        <div class="pq-section-card" style="margin-bottom:20px;">
+                            <div class="pq-section-header">
+                                <h3><i class="ti ti-table"></i> Ma trận Phân quyền — tick Thêm / Xóa / Sửa cho từng Nhóm</h3>
+                                <span style="font-size:11px;color:#718096;">Tự động lưu khi tick. Bỏ tick cả 3 để thu hồi quyền.</span>
+                            </div>
+                            <div class="pq-section-body" style="overflow-x:auto;">
+                                <table class="matrix-table" id="matrixTable">
+                                    <thead id="matrixHead"></thead>
+                                    <tbody id="matrixBody"></tbody>
+                                </table>
                             </div>
                         </div>
 
-                        <!-- Cột phải: Nhóm người dùng + Phân quyền -->
-                        <div style="display:flex;flex-direction:column;gap:20px;">
+                        <!-- Bảng tổng hợp -->
+                        <div class="pq-section-card">
+                            <div class="pq-section-header">
+                                <h3><i class="ti ti-list-check"></i> Tóm tắt — Chức năng &amp; Quyền theo Vai trò</h3>
+                                <span style="font-size:11px;color:#718096;" id="lblSummaryTotal">0 chức năng</span>
+                            </div>
+                            <div class="pq-section-body" style="overflow-x:auto;">
+                                <table class="matrix-table" id="summaryTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width:70px;">Mã CN</th>
+                                            <th style="min-width:190px;">Tên chức năng</th>
+                                            <th style="min-width:130px;">Màn hình</th>
+                                            <th class="text-center"><span class="badge-admin">ADMIN</span></th>
+                                            <th class="text-center"><span class="badge-pdt">PDT</span></th>
+                                            <th class="text-center"><span class="badge-ptc">PTC</span></th>
+                                            <th class="text-center"><span class="badge-sv">SV</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="summaryBody"></tbody>
+                                </table>
+                                <p style="font-size:11px;color:#a0aec0;margin-top:8px;">
+                                    Chú thích: <span class="perm-chip on">T</span> Thêm ·
+                                    <span class="perm-chip on">X</span> Xóa ·
+                                    <span class="perm-chip on">S</span> Sửa — ô tô xanh là có quyền.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Sub-panel 2: Chức năng hệ thống -->
+                    <div id="pqt-chucnang" class="pq-sub-panel">
+                        <div class="pq-section-card">
+                            <div class="pq-section-header">
+                                <h3><i class="ti ti-layout-grid"></i> Danh sách Chức năng (CHUCNANG)</h3>
+                                <span style="font-size:11px;color:#718096;" id="lblChucNangTotal">0 chức năng</span>
+                            </div>
+                            <div class="pq-section-body">
+                                <div class="form-inline-row">
+                                    <div>
+                                        <label>Mã chức năng</label>
+                                        <input id="cnMa" class="form-select" style="width:130px;" placeholder="VD: QL_SV">
+                                    </div>
+                                    <div>
+                                        <label>Tên chức năng</label>
+                                        <input id="cnTen" class="form-select" style="width:200px;" placeholder="Quản lý Sinh viên">
+                                    </div>
+                                    <div>
+                                        <label>Màn hình (file .html)</label>
+                                        <input id="cnManHinh" class="form-select" style="width:180px;" placeholder="pdt_sv.html">
+                                    </div>
+                                    <div style="display:flex;align-items:flex-end;">
+                                        <button id="btnAddChucNang" class="btn btn-primary" style="height:36px;">
+                                            <i class="ti ti-plus"></i> Thêm chức năng
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="table-container" style="margin:0;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:100px;">Mã CN</th>
+                                                <th>Tên chức năng</th>
+                                                <th>Màn hình được load</th>
+                                                <th style="width:60px;" class="text-center">Xóa</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="chucNangBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 3: Nhóm người dùng + Cấp quyền thủ công -->
+                    <div id="pqt-nhom" class="pq-sub-panel">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
                             <!-- Nhóm người dùng -->
                             <div class="pq-section-card">
                                 <div class="pq-section-header">
@@ -512,22 +551,25 @@
                                 </div>
                             </div>
 
-                            <!-- Bảng phân quyền -->
+                            <!-- Cấp quyền thủ công -->
                             <div class="pq-section-card">
                                 <div class="pq-section-header">
-                                    <h3><i class="ti ti-key"></i> Cấp Quyền (BANGPHANQUYEN)</h3>
+                                    <h3><i class="ti ti-key"></i> Cấp Quyền thủ công (BANGPHANQUYEN)</h3>
                                 </div>
                                 <div class="pq-section-body">
+                                    <p style="font-size:12px;color:#718096;margin-bottom:10px;">
+                                        <i class="ti ti-info-circle"></i> Cấp nhanh toàn quyền Thêm/Xóa/Sửa. Để tùy chỉnh từng quyền, dùng tab <strong>Bảng Phân quyền</strong>.
+                                    </p>
                                     <div class="form-inline-row">
                                         <div>
                                             <label>Nhóm</label>
-                                            <select id="pqNhom" class="form-select" style="width:110px;">
+                                            <select id="pqNhom" class="form-select" style="width:120px;">
                                                 <option value="">-- chọn --</option>
                                             </select>
                                         </div>
                                         <div>
                                             <label>Chức năng</label>
-                                            <select id="pqCN" class="form-select" style="width:160px;">
+                                            <select id="pqCN" class="form-select" style="width:175px;">
                                                 <option value="">-- chọn --</option>
                                             </select>
                                         </div>
@@ -543,7 +585,7 @@
                                                 <tr>
                                                     <th>Nhóm</th>
                                                     <th>Chức năng</th>
-                                                    <th>Màn hình</th>
+                                                    <th>Quyền</th>
                                                     <th style="width:50px;"></th>
                                                 </tr>
                                             </thead>
@@ -552,7 +594,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

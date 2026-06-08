@@ -158,11 +158,19 @@
                     
                     <div class="available-section">
                         <div class="table-toolbar" style="margin-bottom: 12px; padding: 0;">
-                            <div class="filter-group">
+                            <div class="filter-group" style="flex-wrap:wrap;gap:12px;">
                                 <h2 style="font-size: 16px; color: #2d3748; font-weight: 600;">Lớp học phần mở trong học kỳ</h2>
-                                <div class="search-box" style="width: 280px;">
-                                    <i class="ti ti-search"></i>
-                                    <input type="text" id="searchClass" placeholder="Tìm nhanh theo mã lớp, tên môn...">
+                                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <label style="font-size:13px;color:#4a5568;font-weight:600;white-space:nowrap;">Học kỳ:</label>
+                                        <select id="termSelect" class="form-select" style="width:230px;font-size:13px;">
+                                            <option value="">Đang tải...</option>
+                                        </select>
+                                    </div>
+                                    <div class="search-box" style="width: 250px;">
+                                        <i class="ti ti-search"></i>
+                                        <input type="text" id="searchClass" placeholder="Tìm nhanh theo mã lớp, tên môn...">
+                                    </div>
                                 </div>
                             </div>
                         </div>

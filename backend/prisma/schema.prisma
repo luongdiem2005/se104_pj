@@ -214,9 +214,9 @@ model THAMSO {
 }
 
 model TINH {
-  MaTinh  String @id @db.VarChar(10)
+  MaTinh  String  @id @db.VarChar(10)
   DaXoa   Boolean @default(false)
-  TenTinh String @unique(map: "TINH_TenTinh_key") @db.VarChar(100)
+  TenTinh String  @unique(map: "TINH_TenTinh_key") @db.VarChar(100)
   xaList  XA[]
 
   @@map("tinh")
