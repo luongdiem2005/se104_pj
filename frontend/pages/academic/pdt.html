@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFee - Tổng quan Phòng Đào tạo</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/pdt.css">
+    
+</head>
+<body class="dashboard-page">
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="ti ti-school"></i>
+                <h2>EduFee</h2>
+            </div>
+            <div class="sidebar-user-info">
+                <p class="role-badge">Phòng Đào tạo</p>
+                <h3 class="sidebar-username">Nguyễn Văn A</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active">
+                        <a href="pdt.html">
+                            <i class="ti ti-layout-dashboard"></i>
+                            <span>Tổng quan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_sv.html">
+                            <i class="ti ti-users"></i>
+                            <span>Quản lý Sinh viên</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_khoa.html">
+                            <i class="ti ti-building"></i>
+                            <span>Quản lý Khoa</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_nganhhoc.html">
+                            <i class="ti ti-building-community"></i>
+                            <span>Quản lý Ngành học</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_monhoc.html">
+                            <i class="ti ti-book"></i>
+                            <span>Danh mục Môn học</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_dkhp.html">
+                            <i class="ti ti-clipboard-list"></i>
+                            <span>Mở lớp Học phần</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_diachi.html">
+                            <i class="ti ti-map-pin"></i>
+                            <span>Tỉnh / Xã</span>
+                        </a>
+                    </li>
+                    <li><a href="pdt_yeucau.html"><i class="ti ti-file-check"></i><span>Xét duyệt đơn</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Trang quản trị tổng quan</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="btnLogout" class="btn-logout">
+                        <i class="ti ti-logout"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f4f8; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <p style="margin: 0; font-size: 14px; color: #475569;"><strong>Học kỳ:</strong> <span id="hocKyOut" style="color:#1e40af;font-weight:600;">—</span> &nbsp;&nbsp; <strong>Năm học:</strong> <span id="namHocOut" style="color:#1e40af;font-weight:600;">—</span></p>
+                </div>
+
+                <section class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon bg-blue">
+                            <i class="ti ti-user-check"></i>
+                        </div>
+                        <div class="metric-info">
+                            <p class="metric-label">Tổng số sinh viên</p>
+                            <h2 class="metric-value" id="totalStudentCount">--</h2>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon bg-green">
+                            <i class="ti ti-book-2"></i>
+                        </div>
+                        <div class="metric-info">
+                            <p class="metric-label">Môn học đang mở</p>
+                            <h2 class="metric-value" id="openCoursesCount">--</h2>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon bg-orange">
+                            <i class="ti ti-discount-check"></i>
+                        </div>
+                        <div class="metric-info">
+                            <p class="metric-label">Đã hoàn thành ĐKHP</p>
+                            <h2 class="metric-value" id="completionRate">--</h2>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dashboard-charts-row">
+                    <div class="chart-container-card">
+                        <h3>Thống kê số lượng sinh viên đăng ký môn học theo học kỳ</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="semesterChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+                <div id="shared-footer-container"></div>
+            </main>
+        </div>
+    </div>
+
+      <script src="../../js/api.js"></script>
+    <script src="../../js/auth-guard.js"></script>
+    <script src="../../js/pdt_dashboard.js"></script>
+  </body>
+</html>

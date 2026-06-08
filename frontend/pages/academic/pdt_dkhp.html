@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFee - Mở lớp Học phần</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/pdt_table.css">
+</head>
+<body class="dashboard-page">
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="ti ti-school"></i>
+                <h2>EduFee</h2>
+            </div>
+            <div class="sidebar-user-info">
+                <p class="role-badge">Phòng Đào tạo</p>
+                <h3 class="sidebar-username">Nguyễn Văn A</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="pdt.html">
+                            <i class="ti ti-layout-dashboard"></i>
+                            <span>Tổng quan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_sv.html">
+                            <i class="ti ti-users"></i>
+                            <span>Quản lý Sinh viên</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_khoa.html">
+                            <i class="ti ti-building"></i>
+                            <span>Quản lý Khoa</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_nganhhoc.html">
+                            <i class="ti ti-building-community"></i>
+                            <span>Quản lý Ngành học</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_monhoc.html">
+                            <i class="ti ti-book"></i>
+                            <span>Danh mục Môn học</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="pdt_dkhp.html">
+                            <i class="ti ti-clipboard-list"></i>
+                            <span>Mở lớp Học phần</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pdt_diachi.html">
+                            <i class="ti ti-map-pin"></i>
+                            <span>Tỉnh / Xã</span>
+                        </a>
+                    </li>
+                    <li><a href="pdt_yeucau.html"><i class="ti ti-file-check"></i><span>Xét duyệt đơn</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Quản lý Mở lớp Đăng ký học phần</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="btnLogout" class="btn-logout">
+                        <i class="ti ti-logout"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                
+                <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f4f8; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <p style="margin: 0; font-size: 14px; color: #475569;"><strong>Học kỳ hiện tại:</strong> <span id="currentSemesterLabel" style="color: #1e40af; font-weight: 600;">Đang tải...</span></p>
+                </div>
+
+                <div class="table-toolbar">
+                    <div class="filter-group">
+                      <div class="search-box">
+                        <i class="ti ti-search"></i>
+                        <input type="text" id="searchClassSubject" placeholder="Tìm theo mã lớp hoặc mã môn...">
+                      </div>
+                    </div>
+                    <button class="btn btn-primary" id="btnOpenAddModal">
+                      <i class="ti ti-plus"></i> <span>Mở lớp học phần</span>
+                    </button>
+                  </div>
+                  
+                  <div class="table-container">
+                    <table class="data-table">
+                      <thead>
+                        <tr>
+                          <th style="width:70px;">STT</th>
+                          <th>Mã lớp</th>
+                          <th>Tên học phần</th>
+                          <th>Loại môn</th>
+                          <th class="text-center">Sĩ số</th>
+                          <th class="text-center">Trạng thái</th>
+                          <th class="text-center">Thao tác</th>
+                        </tr>
+                      </thead>
+                      <tbody id="classTableBody"></tbody>
+                    </table>
+                  </div>
+
+                <div class="pagination-wrapper">
+                    <p class="pagination-info">Hiển thị danh sách lớp học phần mở theo học kỳ hiện tại</p>
+                </div>
+                <div id="shared-footer-container"></div>
+            </main>
+        </div>
+    </div>
+
+    <div id="classModal" class="modal-overlay hidden">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3 id="modalTitle">Mở lớp học phần mới</h3>
+            <button class="btn-close-modal" id="btnCloseModal"><i class="ti ti-x"></i></button>
+          </div>
+          <form id="classForm" novalidate>
+            <div class="modal-body">
+      
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="classId">Mã Lớp *</label>
+                  <input type="text" id="classId" name="classId" placeholder="" required>
+                </div>
+                <div class="form-group">
+                  <label for="classSemester">Học Kỳ *</label>
+                  <input type="text" id="classSemester" name="classSemester" readonly disabled style="background-color: #f3f4f6; cursor: not-allowed;">
+                </div>
+              </div>
+      
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="classSubjectId">Môn Học *</label>
+                  <select id="classSubjectId" name="classSubjectId" required>
+                    <option value="">-- Chọn môn học --</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="classMaxStudents">Sĩ Số Tối Đa *</label>
+                  <input type="number" id="classMaxStudents" name="classMaxStudents" min="1" value="50" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="classType">Loại môn (LT / TH) *</label>
+                  <select id="classType" name="classType" required>
+                    <option value="">-- Chọn loại môn --</option>
+                  </select>
+                </div>
+                <div class="form-group"></div>
+              </div>
+      
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="btnCancelModal">Hủy</button>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <script src="../../js/api.js"></script>
+    <script src="../../js/auth-guard.js"></script>
+    <script src="../../js/pdt_dkhp.js"></script>
+  </body>
+</html>

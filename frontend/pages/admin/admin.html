@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFee - Hệ thống Quản trị Tối cao (System Administrator)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/pdt_table.css">
+
+    <style>
+        /* ===== KPI Cards ===== */
+        .admin-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .kpi-card-admin {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .kpi-card-admin h3 {
+            font-size: 22px;
+            color: #1a202c;
+            font-weight: 700;
+            margin-top: 4px;
+            font-family: monospace;
+        }
+        .kpi-card-admin span {
+            font-size: 12px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        /* ===== Tab Navigation ===== */
+        .admin-tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .admin-tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            border-radius: 6px 6px 0 0;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .admin-tab-btn:hover { background: #f7fafc; color: #2d3748; }
+        .admin-tab-btn.active {
+            color: #e53e3e;
+            border-bottom-color: #e53e3e;
+            background: #fff5f5;
+        }
+        .admin-tab-panel { display: none; }
+        .admin-tab-panel.active { display: block; }
+
+        /* ===== Workspace layouts ===== */
+        .admin-workspace {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+            align-items: start;
+        }
+        .pq-workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* ===== Log Console ===== */
+        .log-console-card {
+            background: #1a202c;
+            border-radius: 8px;
+            border: 1px solid #2d3748;
+            padding: 16px;
+            color: #48bb78;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        .log-console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            color: #a0aec0;
+            font-size: 12px;
+        }
+        .log-stream {
+            height: 340px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .log-item { margin-bottom: 6px; word-break: break-all; }
+        .log-timestamp { color: #3182ce; }
+        .log-success { color: #48bb78; }
+        .log-warning { color: #ecc94b; }
+        .log-info { color: #a0aec0; }
+
+        /* ===== Phân quyền UI ===== */
+        .pq-section-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .pq-section-header {
+            background: #f7fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pq-section-header h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pq-section-body { padding: 14px 16px; }
+
+        /* Role matrix table */
+        .matrix-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .matrix-table th, .matrix-table td {
+            border: 1px solid #e2e8f0;
+            padding: 7px 10px;
+            text-align: left;
+        }
+        .matrix-table thead th {
+            background: #2d3748;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+        }
+        .matrix-table thead th:first-child { text-align: left; }
+        .matrix-table tbody tr:nth-child(even) { background: #f7fafc; }
+        .matrix-table td.check-cell { text-align: center; }
+        .check-yes { color: #38a169; font-size: 16px; }
+        .check-no  { color: #cbd5e0; font-size: 16px; }
+
+        /* Ô phân quyền: 3 checkbox Thêm / Xóa / Sửa */
+        .matrix-table td.perm-cell { padding: 6px 8px; }
+        .perm-group {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        .perm-group label {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            user-select: none;
+        }
+        .perm-group input[type="checkbox"] {
+            width: 15px; height: 15px;
+            accent-color: #e53e3e;
+            cursor: pointer;
+            margin: 0;
+        }
+        .perm-group label.on { color: #c53030; }
+
+        /* Bảng tổng hợp: chip quyền T/X/S */
+        .perm-chip {
+            display: inline-block;
+            min-width: 16px;
+            padding: 1px 5px;
+            margin: 0 1px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            background: #edf2f7;
+            color: #cbd5e0;
+            border: 1px solid #e2e8f0;
+        }
+        .perm-chip.on { background: #f0fff4; color: #276749; border-color: #68d391; }
+        .perm-none { color: #cbd5e0; font-size: 11px; font-style: italic; }
+
+        /* badge colors */
+        .badge-admin { background:#fff5f5; color:#c53030; border:1px solid #fc8181; border-radius:4px; padding:2px 8px; font-size:11px; font-weight:700; }
+        .badge-pdt   { background:#ebf8ff; color:#2b6cb0; border:1px solid #63b3ed; border-radius:4px; padding:2px 8px; font-size:11px; font-weight:700; }
+        .badge-ptc   { background:#f0fff4; color:#276749; border:1px solid #68d391; border-radius:4px; padding:2px 8px; font-size:11px; font-weight:700; }
+        .badge-sv    { background:#fffff0; color:#744210; border:1px solid #f6e05e; border-radius:4px; padding:2px 8px; font-size:11px; font-weight:700; }
+
+        .form-inline-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-bottom: 12px;
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .form-inline-row label { font-size: 11px; color: #718096; font-weight: 600; display: block; margin-bottom: 3px; }
+
+        .btn-sm-red {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn-sm-red:hover { background: #c53030; }
+
+        .section-divider { height: 1px; background: #e2e8f0; margin: 16px 0; }
+    </style>
+</head>
+<body class="dashboard-page">
+
+    <div class="app-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" style="background: #1a202c; border-right: 1px solid #2d3748;">
+            <div class="sidebar-brand">
+                <i class="ti ti-shield-lock" style="color: #e53e3e; font-size: 26px;"></i>
+                <h2 style="color: #ffffff;">EduFee Root</h2>
+            </div>
+            <div class="sidebar-user-info" style="border-bottom: 1px solid #2d3748;">
+                <p class="role-badge" style="background: rgba(229,62,62,0.2); color: #fc8181; border: 1px solid #e53e3e;">Super Administrator</p>
+                <h3 id="sidebar-admin-name" style="color: #edf2f7;">Root_Manager</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active">
+                        <a href="admin.html" style="color: #edf2f7;">
+                            <i class="ti ti-settings-automation" style="color: #fc8181;"></i>
+                            <span>Bảng điều khiển Root</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Hệ thống Quản trị & Phân quyền Tối cao</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="btnLogout" class="btn-logout" style="background: #e53e3e; color: white; border-color: #e53e3e;">
+                        <i class="ti ti-logout"></i>
+                        <span>Đăng xuất Root</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+
+                <!-- KPI Cards -->
+                <div class="admin-kpi-grid">
+                    <div class="kpi-card-admin">
+                        <div>
+                            <span>Tổng số tài khoản người dùng</span>
+                            <h3 id="lblTotalUsers">—</h3>
+                        </div>
+                        <i class="ti ti-users" style="font-size: 24px; color: #4a5568;"></i>
+                    </div>
+                    <div class="kpi-card-admin">
+                        <div>
+                            <span>Nhóm vai trò</span>
+                            <h3>4</h3>
+                        </div>
+                        <i class="ti ti-id-badge" style="font-size: 24px; color: #3182ce;"></i>
+                    </div>
+                    <div class="kpi-card-admin">
+                        <div>
+                            <span>Tham số hệ thống</span>
+                            <h3 id="lblParamCount">—</h3>
+                        </div>
+                        <i class="ti ti-adjustments" style="font-size: 24px; color: #ed8936;"></i>
+                    </div>
+                    <div class="kpi-card-admin">
+                        <div>
+                            <span>Chức năng được định nghĩa</span>
+                            <h3 id="lblChucNangCount">—</h3>
+                        </div>
+                        <i class="ti ti-layout-grid" style="font-size: 24px; color: #38a169;"></i>
+                    </div>
+                </div>
+
+                <!-- TAB NAVIGATION -->
+                <div class="admin-tabs">
+                    <button class="admin-tab-btn active" data-tab="tab-accounts">
+                        <i class="ti ti-users"></i> Quản lý Tài khoản
+                    </button>
+                    <button class="admin-tab-btn" data-tab="tab-phanquyen">
+                        <i class="ti ti-shield-check"></i> Phân Quyền (RBAC)
+                    </button>
+                    <button class="admin-tab-btn" data-tab="tab-params">
+                        <i class="ti ti-settings"></i> Tham số Hệ thống
+                    </button>
+                </div>
+
+                <!-- ======================== TAB 1: QUẢN LÝ TÀI KHOẢN ======================== -->
+                <div id="tab-accounts" class="admin-tab-panel active">
+                    <div class="admin-workspace">
+                        <!-- Form + Bảng tài khoản -->
+                        <div class="available-section" style="margin-top: 0;">
+                            <div class="table-toolbar" style="padding: 0; margin-bottom: 12px;">
+                                <h2 style="font-size: 15px; color: #2d3748; font-weight: 600;">
+                                    Danh sách tài khoản nội bộ (RBAC Ledger)
+                                </h2>
+                            </div>
+
+                            <!-- Form tạo tài khoản -->
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px;background:#f7fafc;padding:12px;border-radius:8px;">
+                                <input id="acTenDangNhap" placeholder="Tên đăng nhập" class="form-select" style="width:155px;">
+                                <input id="acMatKhau" type="password" placeholder="Mật khẩu (≥6 ký tự)" class="form-select" style="width:165px;">
+                                <input id="acHoTen" placeholder="Họ và tên" class="form-select" style="width:175px;">
+                                <select id="acVaiTro" class="form-select" style="width:110px;">
+                                    <option value="PDT">PDT</option>
+                                    <option value="PTC">PTC</option>
+                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="SV">SV</option>
+                                </select>
+                                <input id="acMSSV" placeholder="MSSV (nếu vai trò SV)" class="form-select" style="width:165px;">
+                                <button id="btnCreateAccount" class="btn btn-primary">
+                                    <i class="ti ti-user-plus"></i> Tạo tài khoản
+                                </button>
+                            </div>
+
+                            <div class="table-container" style="margin-top: 0;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:140px;">Tên Tài Khoản</th>
+                                            <th>Họ và Tên</th>
+                                            <th style="width:130px;">Vai Trò</th>
+                                            <th style="width:130px;" class="text-center">Trạng Thái</th>
+                                            <th style="width:140px;" class="text-center">Hành Động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminUserTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Log Console -->
+                        <div class="log-console-card">
+                            <div class="log-console-header">
+                                <span><i class="ti ti-terminal-2"></i> SYSTEM AUDIT TRAIL</span>
+                                <span style="color: #48bb78; font-weight: bold;">● LIVE</span>
+                            </div>
+                            <div class="log-stream" id="logStreamContainer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================== TAB 2: PHÂN QUYỀN ======================== -->
+                <div id="tab-phanquyen" class="admin-tab-panel">
+
+                    <!-- Ma trận quyền theo vai trò (có thể tick Thêm/Xóa/Sửa) -->
+                    <div class="pq-section-card" style="margin-bottom:20px;">
+                        <div class="pq-section-header">
+                            <h3><i class="ti ti-table"></i> Ma trận Phân quyền theo Vai trò — tick Thêm / Xóa / Sửa</h3>
+                            <span style="font-size:11px;color:#718096;">Tick để cấp quyền, bỏ tick cả 3 để thu hồi (tự động lưu)</span>
+                        </div>
+                        <div class="pq-section-body" style="overflow-x:auto;">
+                            <table class="matrix-table" id="matrixTable">
+                                <thead id="matrixHead"></thead>
+                                <tbody id="matrixBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Bảng tổng hợp các chức năng -->
+                    <div class="pq-section-card" style="margin-bottom:20px;">
+                        <div class="pq-section-header">
+                            <h3><i class="ti ti-list-check"></i> Bảng tổng hợp Chức năng &amp; Quyền theo Vai trò</h3>
+                            <span style="font-size:11px;color:#718096;" id="lblSummaryTotal">0 chức năng</span>
+                        </div>
+                        <div class="pq-section-body" style="overflow-x:auto;">
+                            <table class="matrix-table" id="summaryTable">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width:60px;">Mã CN</th>
+                                        <th style="min-width:180px;">Tên chức năng</th>
+                                        <th style="min-width:120px;">Màn hình</th>
+                                        <th class="text-center"><span class="badge-admin">ADMIN</span></th>
+                                        <th class="text-center"><span class="badge-pdt">PDT</span></th>
+                                        <th class="text-center"><span class="badge-ptc">PTC</span></th>
+                                        <th class="text-center"><span class="badge-sv">SV</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="summaryBody"></tbody>
+                            </table>
+                            <p style="font-size:11px;color:#a0aec0;margin-top:8px;">
+                                Chú thích: <span class="perm-chip on">T</span> Thêm ·
+                                <span class="perm-chip on">X</span> Xóa ·
+                                <span class="perm-chip on">S</span> Sửa — ô tô xanh nghĩa là có quyền.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pq-workspace">
+                        <!-- Cột trái: Chức năng hệ thống -->
+                        <div>
+                            <div class="pq-section-card">
+                                <div class="pq-section-header">
+                                    <h3><i class="ti ti-layout-grid"></i> Danh sách Chức năng (CHUCNANG)</h3>
+                                    <span style="font-size:11px;color:#718096;" id="lblChucNangTotal">0 chức năng</span>
+                                </div>
+                                <div class="pq-section-body">
+                                    <!-- Form thêm chức năng -->
+                                    <div class="form-inline-row">
+                                        <div>
+                                            <label>Mã chức năng</label>
+                                            <input id="cnMa" class="form-select" style="width:120px;" placeholder="VD: QL_SV">
+                                        </div>
+                                        <div>
+                                            <label>Tên chức năng</label>
+                                            <input id="cnTen" class="form-select" style="width:160px;" placeholder="Quản lý Sinh viên">
+                                        </div>
+                                        <div>
+                                            <label>Màn hình (file)</label>
+                                            <input id="cnManHinh" class="form-select" style="width:160px;" placeholder="pdt_sv.html">
+                                        </div>
+                                        <div style="display:flex;align-items:flex-end;">
+                                            <button id="btnAddChucNang" class="btn btn-primary" style="height:36px;">
+                                                <i class="ti ti-plus"></i> Thêm
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="table-container" style="margin:0;">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Mã CN</th>
+                                                    <th>Tên chức năng</th>
+                                                    <th>Màn hình</th>
+                                                    <th style="width:50px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="chucNangBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: Nhóm người dùng + Phân quyền -->
+                        <div style="display:flex;flex-direction:column;gap:20px;">
+
+                            <!-- Nhóm người dùng -->
+                            <div class="pq-section-card">
+                                <div class="pq-section-header">
+                                    <h3><i class="ti ti-users-group"></i> Nhóm Người dùng (NHOMNGUOIDUNG)</h3>
+                                </div>
+                                <div class="pq-section-body">
+                                    <div class="form-inline-row">
+                                        <div>
+                                            <label>Mã nhóm</label>
+                                            <input id="nhMa" class="form-select" style="width:100px;" placeholder="PDT">
+                                        </div>
+                                        <div>
+                                            <label>Tên nhóm</label>
+                                            <input id="nhTen" class="form-select" style="width:190px;" placeholder="Phòng Đào tạo">
+                                        </div>
+                                        <div style="display:flex;align-items:flex-end;">
+                                            <button id="btnAddNhom" class="btn btn-primary" style="height:36px;">
+                                                <i class="ti ti-plus"></i> Thêm
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="table-container" style="margin:0;">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Mã nhóm</th>
+                                                    <th>Tên nhóm</th>
+                                                    <th style="width:50px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="nhomBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bảng phân quyền -->
+                            <div class="pq-section-card">
+                                <div class="pq-section-header">
+                                    <h3><i class="ti ti-key"></i> Cấp Quyền (BANGPHANQUYEN)</h3>
+                                </div>
+                                <div class="pq-section-body">
+                                    <div class="form-inline-row">
+                                        <div>
+                                            <label>Nhóm</label>
+                                            <select id="pqNhom" class="form-select" style="width:110px;">
+                                                <option value="">-- chọn --</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label>Chức năng</label>
+                                            <select id="pqCN" class="form-select" style="width:160px;">
+                                                <option value="">-- chọn --</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex;align-items:flex-end;">
+                                            <button id="btnCapQuyen" class="btn btn-primary" style="height:36px;">
+                                                <i class="ti ti-shield-plus"></i> Cấp quyền
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="table-container" style="margin:0;">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nhóm</th>
+                                                    <th>Chức năng</th>
+                                                    <th>Màn hình</th>
+                                                    <th style="width:50px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="phanQuyenBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================== TAB 3: THAM SỐ HỆ THỐNG ======================== -->
+                <div id="tab-params" class="admin-tab-panel">
+                    <div class="pq-section-card">
+                        <div class="pq-section-header">
+                            <h3><i class="ti ti-adjustments-horizontal"></i> Tham số Hệ thống (THAMSO)</h3>
+                            <button id="btnAddParam" class="btn btn-primary" style="font-size:12px;padding:6px 12px;">
+                                <i class="ti ti-plus"></i> Thêm tham số
+                            </button>
+                        </div>
+                        <div class="pq-section-body">
+                            <!-- Form thêm/sửa tham số -->
+                            <div class="form-inline-row" id="paramFormRow" style="display:none;">
+                                <div>
+                                    <label>Tên tham số</label>
+                                    <input id="paramTen" class="form-select" style="width:200px;" placeholder="VD: TyLeMienGiamToiDa">
+                                </div>
+                                <div>
+                                    <label>Giá trị</label>
+                                    <input id="paramGiaTri" class="form-select" style="width:120px;" placeholder="100">
+                                </div>
+                                <div style="display:flex;align-items:flex-end;gap:6px;">
+                                    <button id="btnSaveParam" class="btn btn-primary" style="height:36px;">
+                                        <i class="ti ti-device-floppy"></i> Lưu
+                                    </button>
+                                    <button id="btnCancelParam" class="btn" style="height:36px;background:#e2e8f0;color:#4a5568;">
+                                        Huỷ
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="table-container" style="margin:0;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên tham số</th>
+                                            <th style="width:150px;">Giá trị</th>
+                                            <th style="width:80px;" class="text-center">Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paramTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="shared-footer-container"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth-guard.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

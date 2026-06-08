@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFee - Cấu hình Định mức Học phí</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/pdt_table.css">
+
+    <style>
+        .rates-split-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        .config-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .config-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-group-compact {
+            margin-bottom: 14px;
+        }
+        .form-group-compact label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+        .currency-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .currency-input-wrapper input {
+            padding-right: 45px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+        .currency-unit {
+            position: absolute;
+            right: 12px;
+            font-size: 13px;
+            color: #a0aec0;
+            font-weight: 600;
+        }
+    </style>
+    
+</head>
+<body class="dashboard-page">
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="ti ti-building-bank" style="color: #38a169;"></i>
+                <h2>EduFee Finance</h2>
+            </div>
+            <div class="sidebar-user-info">
+                <p class="role-badge" style="background: rgba(56, 161, 105, 0.15); color: #48bb78;">Phòng Tài chính</p>
+                <h3 class="sidebar-username" id="sidebar-username">Trần Thị Thu Kế</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="ptc.html">
+                            <i class="ti ti-chart-pie"></i>
+                            <span>Báo cáo Tổng quan</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="ptc_hocphi.html">
+                            <i class="ti ti-coin"></i>
+                            <span>Định mức Học phí</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ptc_miengiam.html">
+                            <i class="ti ti-shield-check"></i>
+                            <span>Xét duyệt Miễn giảm</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Định mức Đơn giá Học phí Tín chỉ</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="btnLogout" class="btn-logout">
+                        <i class="ti ti-logout"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                
+                <div class="rates-split-container">
+                    
+                    <div class="config-card">
+                        <h3 id="formPanelTitle"><i class="ti ti-edit"></i> Cập nhật định mức giá</h3>
+                        <form id="formRateConfig">
+                            <input type="hidden" id="txtRateId">
+
+                            <div class="form-group-compact">
+                                <label for="selectClassType">Loại hình lớp học phần</label>
+                                <select id="selectClassType" class="form-select" disabled>
+                                    <option value="Lý thuyết">Lý thuyết</option>
+                                    <option value="Thực hành">Thực hành</option>
+                                    <option value="Đồ án tốt nghiệp">Đồ án tốt nghiệp / Khóa luận</option>
+                                </select>
+                                <small style="color: #a0aec0; font-size: 11px; margin-top: 4px; display: block;">Mặc định phân loại từ khung chương trình.</small>
+                            </div>
+
+                            <div class="form-group-compact">
+                                <label for="numUnitPrice">Đơn giá trên một tín chỉ</label>
+                                <div class="currency-input-wrapper">
+                                    <input type="number" id="numUnitPrice" class="form-control" placeholder="" min="0" required>
+                                    <span class="currency-unit">VNĐ</span>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 20px; display: flex; gap: 8px;">
+                                <button type="button" id="btnResetForm" class="btn btn-secondary" style="flex: 1; padding: 8px;">Hủy chọn</button>
+                                <button type="submit" class="btn btn-primary" style="flex: 1; padding: 8px; background-color: #38a169; border-color: #38a169;">
+                                    <i class="ti ti-device-floppy"></i> Lưu cấu hình
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="table-container" style="margin-top: 0;">
+                        <div style="padding: 16px; border-bottom: 1px solid #edf2f7; background: #fafafa;">
+                            <h4 style="font-size: 14px; color: #4a5568; font-weight: 600;">Bảng quy định định mức đơn giá áp dụng toàn hệ thống</h4>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70px;">STT</th>
+                                    <th>Loại Môn Học</th>
+                                    <th style="width: 240px;" class="text-right">Đơn Giá Hiện Tại (Tín chỉ)</th>
+                                    <th style="width: 200px;">Cập Nhật Cuối</th>
+                                    <th style="width: 120px;" class="text-center">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ratesTableBody">
+                                </tbody>
+                        </table>
+                        <div style="padding: 12px 16px; font-size: 12px; color: #718096; background-color: #f7fafc; border-top: 1px solid #edf2f7;">
+                            <i class="ti ti-info-circle"></i> <strong>Ghi chú:</strong> Khi cán bộ thay đổi giá tại đây, hệ thống EduFee sẽ lập tức tính toán lại công nợ thô cho toàn bộ giỏ môn đăng ký của sinh viên.
+                        </div>
+                    </div>
+
+                </div>
+                <div id="shared-footer-container"></div>
+            </main>
+        </div>
+    </div>
+<!-- đổi theo trang -->
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth-guard.js"></script>
+    <script src="../../js/ptc_hocphi.js"></script>
+  </body>
+</html>

@@ -1,0 +1,290 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model CHUONGTRINHHOC {
+  MaNganh    String  @db.VarChar(10)
+  MaMonHoc   String  @db.VarChar(10)
+  HocKy      String  @db.VarChar(20)
+  KhoaApDung String? @db.VarChar(20)
+  GhiChu     String? @db.VarChar(255)
+  monHoc     MONHOC  @relation(fields: [MaMonHoc], references: [MaMonHoc], map: "CHUONGTRINHHOC_MaMonHoc_fkey", onUpdate: Cascade)
+  nganh      NGANH   @relation(fields: [MaNganh], references: [MaNganh], map: "CHUONGTRINHHOC_MaNganh_fkey", onUpdate: Cascade)
+
+  @@id([MaNganh, MaMonHoc])
+  @@index([MaMonHoc], map: "CHUONGTRINHHOC_MaMonHoc_fkey")
+  @@map("chuongtrinhhoc")
+}
+
+model CT_MONHOCTRUOC {
+  MaMonHoc      String @db.VarChar(10)
+  MaMonHocTruoc String @db.VarChar(10)
+  monHocTruoc   MONHOC @relation("ct_monhoctruoc_MaMonHocTruocTomonhoc", fields: [MaMonHocTruoc], references: [MaMonHoc], map: "CT_MONHOCTRUOC_MaMonHocTruoc_fkey", onUpdate: Cascade)
+  monHoc        MONHOC @relation("ct_monhoctruoc_MaMonHocTomonhoc", fields: [MaMonHoc], references: [MaMonHoc], map: "CT_MONHOCTRUOC_MaMonHoc_fkey", onUpdate: Cascade)
+
+  @@id([MaMonHoc, MaMonHocTruoc])
+  @@index([MaMonHocTruoc], map: "CT_MONHOCTRUOC_MaMonHocTruoc_fkey")
+  @@map("ct_monhoctruoc")
+}
+
+model CT_PHIEUDK {
+  MaPhieuDK   String      @db.VarChar(15)
+  MaMonHoc    String      @db.VarChar(10)
+  monHoc      MONHOC      @relation(fields: [MaMonHoc], references: [MaMonHoc], map: "CT_PHIEUDK_MaMonHoc_fkey", onUpdate: Cascade)
+  phieuDangKy PHIEUDANGKY @relation(fields: [MaPhieuDK], references: [MaPhieu], map: "CT_PHIEUDK_MaPhieuDK_fkey", onUpdate: Cascade)
+
+  @@id([MaPhieuDK, MaMonHoc])
+  @@index([MaMonHoc], map: "CT_PHIEUDK_MaMonHoc_fkey")
+  @@map("ct_phieudk")
+}
+
+model DOITUONGUUTIEN {
+  MaDoiTuong   String     @id @db.VarChar(50)
+  DaXoa        Boolean    @default(false)
+  TenDoiTuong  String     @unique(map: "DOITUONGUUTIEN_TenDoiTuong_key") @db.VarChar(100)
+  TyLeMienGiam Decimal    @db.Decimal(5, 2)
+  GhiChu       String?    @db.VarChar(255)
+  sinhVienList SINHVIEN[]
+
+  @@map("doituonguutien")
+}
+
+model HOCKYNAMHOC {
+  MaHKNH          String        @id @db.VarChar(15)
+  HocKy           String        @db.VarChar(20)
+  NgayBatDau      DateTime
+  NgayKetThuc     DateTime
+  HanDongHocPhi   DateTime
+  monHocMoList    MONHOCMO[]
+  phieuDangKyList PHIEUDANGKY[]
+
+  @@map("hockynamhoc")
+}
+
+model KHOA {
+  MaKhoa       String   @id @db.VarChar(10)
+  DaXoa        Boolean  @default(false)
+  TenKhoa      String   @unique(map: "KHOA_TenKhoa_key") @db.VarChar(150)
+  VanPhongKhoa String?  @db.VarChar(150)
+  GhiChu       String?  @db.VarChar(255)
+  monHocList   MONHOC[]
+  nganhList    NGANH[]
+
+  @@map("khoa")
+}
+
+model LOAIMONHOC {
+  MaLoaiMonHoc    String     @id @db.VarChar(10)
+  DaXoa           Boolean    @default(false)
+  TenLoaiMonHoc   String     @unique(map: "LOAIMONHOC_TenLoaiMonHoc_key") @db.VarChar(50)
+  SoTietMotTinChi Int
+  SoTienMotTinChi Decimal    @db.Decimal(12, 2)
+  monHocList      MONHOCMO[]
+
+  @@map("loaimonhoc")
+}
+
+model MONHOC {
+  MaMonHoc          String           @id @db.VarChar(10)
+  DaXoa             Boolean          @default(false)
+  TenMonHoc         String           @unique(map: "MONHOC_TenMonHoc_key") @db.VarChar(150)
+  MaKhoa            String           @db.VarChar(10)
+  SoTiet            Int
+  chuongTrinhList   CHUONGTRINHHOC[]
+  laMonTruocCuaList CT_MONHOCTRUOC[] @relation("ct_monhoctruoc_MaMonHocTruocTomonhoc")
+  monHocTruocList   CT_MONHOCTRUOC[] @relation("ct_monhoctruoc_MaMonHocTomonhoc")
+  ctPhieuDKList     CT_PHIEUDK[]
+  khoa              KHOA             @relation(fields: [MaKhoa], references: [MaKhoa], map: "MONHOC_MaKhoa_fkey", onUpdate: Cascade)
+  monHocMoList      MONHOCMO[]
+
+  @@index([MaKhoa], map: "MONHOC_MaKhoa_fkey")
+  @@map("monhoc")
+}
+
+model MONHOCMO {
+  MaMonHocMo   String      @id @db.VarChar(15)
+  DaXoa        Boolean     @default(false)
+  MaHKNH       String      @db.VarChar(15)
+  MaMonHoc     String      @db.VarChar(10)
+  MaLoaiMonHoc String      @db.VarChar(10)
+  SiSoToiDa    Int         @default(50)
+  SiSoHienTai  Int         @default(0)
+  hocKyNamHoc  HOCKYNAMHOC @relation(fields: [MaHKNH], references: [MaHKNH], map: "MONHOCMO_MaHKNH_fkey", onUpdate: Cascade)
+  monHoc       MONHOC      @relation(fields: [MaMonHoc], references: [MaMonHoc], map: "MONHOCMO_MaMonHoc_fkey", onUpdate: Cascade)
+  loaiMonHoc   LOAIMONHOC  @relation(fields: [MaLoaiMonHoc], references: [MaLoaiMonHoc], map: "MONHOCMO_MaLoaiMonHoc_fkey", onUpdate: Cascade)
+
+  @@index([MaMonHoc], map: "MONHOCMO_MaMonHoc_fkey")
+  @@index([MaLoaiMonHoc], map: "MONHOCMO_MaLoaiMonHoc_fkey")
+  @@map("monhocmo")
+}
+
+model NGANH {
+  MaNganh         String           @id @db.VarChar(10)
+  DaXoa           Boolean          @default(false)
+  TenNganh        String           @unique(map: "NGANH_TenNganh_key") @db.VarChar(150)
+  MaKhoa          String           @db.VarChar(10)
+  GhiChu          String?          @db.VarChar(255)
+  chuongTrinhList CHUONGTRINHHOC[]
+  khoa            KHOA             @relation(fields: [MaKhoa], references: [MaKhoa], map: "NGANH_MaKhoa_fkey", onUpdate: Cascade)
+  sinhVienList    SINHVIEN[]
+
+  @@index([MaKhoa], map: "NGANH_MaKhoa_fkey")
+  @@map("nganh")
+}
+
+model NGUOIDUNG {
+  TenDangNhap  String           @id @db.VarChar(50)
+  MatKhau      String           @db.VarChar(255)
+  VaiTro       nguoidung_VaiTro
+  HoTen        String?          @db.VarChar(100)
+  MaSoSinhVien String?          @unique(map: "NGUOIDUNG_MaSoSinhVien_key") @db.VarChar(15)
+  TrangThai    Boolean          @default(true)
+  sinhVien     SINHVIEN?        @relation(fields: [MaSoSinhVien], references: [MaSoSinhVien], map: "NGUOIDUNG_MaSoSinhVien_fkey", onUpdate: Cascade)
+
+  @@map("nguoidung")
+}
+
+model PHIEUDANGKY {
+  MaPhieu          String           @id @db.VarChar(15)
+  MaSoSinhVien     String           @db.VarChar(15)
+  MaHKNH           String           @db.VarChar(15)
+  NgayLapPhieu     DateTime         @default(now())
+  TongTienDK       Decimal          @default(0.00) @db.Decimal(12, 2)
+  TienMienGiam     Decimal          @default(0.00) @db.Decimal(12, 2)
+  TongTienPhaiDong Decimal          @default(0.00) @db.Decimal(12, 2)
+  SoTienDaDong     Decimal          @default(0.00) @db.Decimal(12, 2)
+  SoTienConLai     Decimal          @default(0.00) @db.Decimal(12, 2)
+  ctPhieuDKList    CT_PHIEUDK[]
+  hocKyNamHoc      HOCKYNAMHOC      @relation(fields: [MaHKNH], references: [MaHKNH], map: "PHIEUDANGKY_MaHKNH_fkey", onUpdate: Cascade)
+  sinhVien         SINHVIEN         @relation(fields: [MaSoSinhVien], references: [MaSoSinhVien], map: "PHIEUDANGKY_MaSoSinhVien_fkey", onUpdate: Cascade)
+  phieuThuList     PHIEUTHUHOCPHI[]
+
+  @@unique([MaSoSinhVien, MaHKNH], map: "PHIEUDANGKY_MaSoSinhVien_MaHKNH_key")
+  @@index([MaHKNH], map: "PHIEUDANGKY_MaHKNH_idx")
+  @@map("phieudangky")
+}
+
+model PHIEUTHUHOCPHI {
+  MaPhieuThu   String      @id @db.VarChar(15)
+  MaPhieuDK    String      @db.VarChar(15)
+  NgayLapPhieu DateTime    @default(now())
+  SoTienThu    Decimal     @db.Decimal(12, 2)
+  phieuDangKy  PHIEUDANGKY @relation(fields: [MaPhieuDK], references: [MaPhieu], map: "PHIEUTHUHOCPHI_MaPhieuDK_fkey", onUpdate: Cascade)
+
+  @@index([MaPhieuDK], map: "PHIEUTHUHOCPHI_MaPhieuDK_idx")
+  @@map("phieuthuhocphi")
+}
+
+model SINHVIEN {
+  MaSoSinhVien    String          @id @db.VarChar(15)
+  DaXoa           Boolean         @default(false)
+  HoTen           String          @db.VarChar(100)
+  KhoaHoc         String?         @db.VarChar(10)
+  NgaySinh        DateTime?
+  GioiTinh        String?         @db.VarChar(10)
+  SoDienThoai     String?         @db.VarChar(15)
+  Email           String?         @unique(map: "SINHVIEN_Email_key") @db.VarChar(100)
+  MaXa            String?         @db.VarChar(10)
+  MaNganh         String          @db.VarChar(10)
+  MaDoiTuong      String?         @db.VarChar(50)
+  TinhTrang       String          @default("Đang học") @db.VarChar(20)
+  nguoiDung       NGUOIDUNG?
+  phieuDangKyList PHIEUDANGKY[]
+  donYeuCauList   DONYEUCAU[]
+  doiTuong        DOITUONGUUTIEN? @relation(fields: [MaDoiTuong], references: [MaDoiTuong], map: "SINHVIEN_MaDoiTuong_fkey", onUpdate: Cascade)
+  nganh           NGANH           @relation(fields: [MaNganh], references: [MaNganh], map: "SINHVIEN_MaNganh_fkey", onUpdate: Cascade)
+  xa              XA?             @relation(fields: [MaXa], references: [MaXa], map: "SINHVIEN_MaXa_fkey", onUpdate: Cascade)
+
+  @@index([MaDoiTuong], map: "SINHVIEN_MaDoiTuong_fkey")
+  @@index([MaNganh], map: "SINHVIEN_MaNganh_fkey")
+  @@index([MaXa], map: "SINHVIEN_MaXa_fkey")
+  @@map("sinhvien")
+}
+
+model THAMSO {
+  TenThamSo String @id @db.VarChar(50)
+  GiaTri    String @db.VarChar(255)
+
+  @@map("thamso")
+}
+
+model TINH {
+  MaTinh  String @id @db.VarChar(10)
+  DaXoa   Boolean @default(false)
+  TenTinh String @unique(map: "TINH_TenTinh_key") @db.VarChar(100)
+  xaList  XA[]
+
+  @@map("tinh")
+}
+
+model XA {
+  MaXa          String     @id @db.VarChar(10)
+  DaXoa         Boolean    @default(false)
+  MaTinh        String     @db.VarChar(10)
+  TenXa         String     @db.VarChar(100)
+  VungSauVungXa Boolean    @default(false)
+  GhiChu        String?    @db.VarChar(255)
+  sinhVienList  SINHVIEN[]
+  tinh          TINH       @relation(fields: [MaTinh], references: [MaTinh], map: "XA_MaTinh_fkey", onUpdate: Cascade)
+
+  @@unique([MaTinh, TenXa], map: "XA_MaTinh_TenXa_key")
+  @@map("xa")
+}
+
+model DONYEUCAU {
+  MaDon        String    @id @db.VarChar(20)
+  MaSoSinhVien String    @db.VarChar(15)
+  Loai         String    @db.VarChar(20)
+  LyDo         String?   @db.Text
+  NgayTao      DateTime  @default(now())
+  TrangThai    String    @default("CHO_DUYET") @db.VarChar(20)
+  GhiChuXuLy   String?   @db.Text
+  NgayXuLy     DateTime?
+  sinhvien     SINHVIEN  @relation(fields: [MaSoSinhVien], references: [MaSoSinhVien], onUpdate: Cascade, map: "DONYEUCAU_MaSoSinhVien_fkey")
+
+  @@index([MaSoSinhVien], map: "DONYEUCAU_MaSoSinhVien_fkey")
+  @@map("donyeucau")
+}
+
+model CHUCNANG {
+  MaChucNang         String          @id @db.VarChar(30)
+  TenChucNang        String          @db.VarChar(150)
+  TenManHinhDuocLoad String?         @db.VarChar(100)
+  phanQuyenList      BANGPHANQUYEN[]
+
+  @@map("chucnang")
+}
+
+model NHOMNGUOIDUNG {
+  MaNhom        String          @id @db.VarChar(20)
+  TenNhom       String          @db.VarChar(100)
+  phanQuyenList BANGPHANQUYEN[]
+
+  @@map("nhomnguoidung")
+}
+
+model BANGPHANQUYEN {
+  MaNhom     String        @db.VarChar(20)
+  MaChucNang String        @db.VarChar(30)
+  Them       Boolean       @default(false)
+  Sua        Boolean       @default(false)
+  Xoa        Boolean       @default(false)
+  nhom       NHOMNGUOIDUNG @relation(fields: [MaNhom], references: [MaNhom], map: "BANGPHANQUYEN_MaNhom_fkey", onDelete: Cascade, onUpdate: Cascade)
+  chucNang   CHUCNANG      @relation(fields: [MaChucNang], references: [MaChucNang], map: "BANGPHANQUYEN_MaChucNang_fkey", onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([MaNhom, MaChucNang])
+  @@index([MaChucNang], map: "BANGPHANQUYEN_MaChucNang_fkey")
+  @@map("bangphanquyen")
+}
+
+enum nguoidung_VaiTro {
+  ADMIN
+  PDT
+  PTC
+  SV
+}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFee - Hệ thống Quản trị Kế hoạch Tài chính</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/pdt_table.css">
+
+    <style>
+        .finance-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .kpi-card-finance {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .kpi-card-finance .kpi-info h3 {
+            font-size: 24px;
+            color: #2d3748;
+            font-weight: 700;
+            font-family: monospace;
+            margin-top: 6px;
+        }
+        .kpi-card-finance .kpi-info span {
+            font-size: 13px;
+            color: #718096;
+            font-weight: 500;
+        }
+        .kpi-card-finance .kpi-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        /* Cấu trúc thanh tiến độ thu tiền trực quan (Progress Analytics) */
+        .analytics-section {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .progress-container-ptc {
+            width: 100%;
+            background-color: #edf2f7;
+            border-radius: 20px;
+            height: 16px;
+            overflow: hidden;
+            margin: 12px 0;
+            display: flex;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            transition: width 0.5s ease-in-out;
+        }
+        .legend-group {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+            color: #4a5568;
+            margin-top: 8px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+    </style>
+    
+</head>
+<body class="dashboard-page">
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="ti ti-building-bank" style="color: #38a169;"></i>
+                <h2>EduFee Finance</h2>
+            </div>
+            <div class="sidebar-user-info">
+                <p class="role-badge" style="background: rgba(56, 161, 105, 0.15); color: #48bb78;">Phòng Tài chính</p>
+                <h3 class="sidebar-username" id="sidebar-username">Trần Thị Thu Kế</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active">
+                        <a href="ptc.html">
+                            <i class="ti ti-chart-pie"></i>
+                            <span>Báo cáo Tổng quan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ptc_hocphi.html">
+                            <i class="ti ti-coin"></i>
+                            <span>Định mức Học phí</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ptc_miengiam.html">
+                            <i class="ti ti-shield-check"></i>
+                            <span>Xét duyệt Miễn giảm</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Bảng điều khiển Giám sát Học phí toàn trường</h1>
+                </div>
+                <div class="header-actions">
+                    <!-- <button class="btn-icon" aria-label="Thông báo hệ thống">
+                        <i class="ti ti-bell"></i>
+                        <span class="badge-dot"></span>
+                    </button> -->
+                    <button id="btnLogout" class="btn-logout">
+                        <i class="ti ti-logout"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                
+                <div class="finance-kpi-grid">
+                    <div class="kpi-card-finance">
+                        <div class="kpi-info">
+                            <span>Phải thu kỳ này (Dự kiến)</span>
+                            <h3 id="kpiTotalGross">0 đ</h3>
+                        </div>
+                        <div class="kpi-icon-wrapper" style="background: #ebf8ff; color: #3182ce;">
+                            <i class="ti ti-calculator"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-card-finance">
+                        <div class="kpi-info">
+                            <span>Miễn giảm chính sách</span>
+                            <h3 id="kpiTotalDiscount" style="color: #dd6b20;">0 đ</h3>
+                        </div>
+                        <div class="kpi-icon-wrapper" style="background: #fffaf0; color: #dd6b20;">
+                            <i class="ti ti-gift"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-card-finance">
+                        <div class="kpi-info">
+                            <span>Doanh thu thực tế (Đã thu)</span>
+                            <h3 id="kpiTotalPaid" style="color: #38a169;">0 đ</h3>
+                        </div>
+                        <div class="kpi-icon-wrapper" style="background: #f0fff4; color: #38a169;">
+                            <i class="ti ti-cash"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-card-finance">
+                        <div class="kpi-info">
+                            <span>Công nợ tồn đọng (Còn nợ)</span>
+                            <h3 id="kpiTotalDebt" style="color: #e53e3e;">0 đ</h3>
+                        </div>
+                        <div class="kpi-icon-wrapper" style="background: #fff5f5; color: #e53e3e;">
+                            <i class="ti ti-alert-triangle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="font-size: 15px; color: #2d3748; font-weight: 600;">Tiến độ chỉ tiêu thu hồi học phí học kỳ</h2>
+                        <span id="lblPercentageOutput" style="font-weight: 700; color: #38a169; font-size: 15px;">Đang tính...</span>
+                    </div>
+                    
+                    <div class="progress-container-ptc">
+                        <div id="barPaid" class="progress-bar-fill" style="background-color: #38a169; width: 0%;"></div>
+                        <div id="barDebt" class="progress-bar-fill" style="background-color: #e53e3e; width: 0%;"></div>
+                    </div>
+
+                    <div class="legend-group">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background-color: #38a169;"></div>
+                            <span>Đã hoàn thành nộp quỹ</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background-color: #e53e3e;"></div>
+                            <span>Còn nợ công nợ tồn đọng</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="available-section">
+                    <div class="table-toolbar" style="margin-bottom: 12px; padding: 0;">
+                        <div class="filter-group">
+                            <h2 style="font-size: 16px; color: #2d3748; font-weight: 600;">Sổ cái theo dõi chi tiết công nợ Sinh viên</h2>
+                            <div class="search-box" style="width: 280px;">
+                                <i class="ti ti-search"></i>
+                                <input type="text" id="searchStudentDebt" placeholder="Tìm kiếm theo MSSV, Họ và tên...">
+                            </div>
+                            <button id="btnExportExcel" class="btn btn-secondary">Xuất Excel</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+<thead><tr><th>MSSV</th><th>Họ và tên</th><th>Học kỳ</th><th>Tổng học phí</th><th>Khấu trừ</th><th>Đã nộp</th><th>Còn nợ</th><th>Trạng thái</th></tr></thead>
+                            <tbody id="masterDebtTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="shared-footer-container"></div>
+            </main>
+        </div>
+    </div>
+<!-- đổi theo trang -->
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth-guard.js"></script>
+    <script src="../../js/export-excel.js"></script>
+    <script src="../../js/ptc.js"></script>
+  </body>
+</html>

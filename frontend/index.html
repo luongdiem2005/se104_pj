@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFee - Đăng nhập Hệ thống</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/form.css">
+    <link rel="stylesheet" href="assets/css/login.css">
+    
+</head>
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="login-brand">
+            <div class="brand-logo">
+                <i class="ti ti-school"></i>
+            </div>
+            <h1>EduFee</h1>
+            <p>Hệ thống Quản lý Đăng ký Môn học và Thu Học phí</p>
+            <span class="name-tag">Trường Đại học Công nghệ Thông tin</span>
+        </div>
+
+        <div class="login-card">
+            <h2>Chào mừng trở lại!</h2>
+            <p class="subtitle">Vui lòng đăng nhập tài khoản để tiếp tục</p>
+
+            <div id="error-message" class="alert alert-danger hidden" role="alert">
+                <i class="ti ti-alert-circle"></i>
+                <span class="error-text">Tên đăng nhập hoặc mật khẩu không chính xác!</span>
+            </div>
+
+            <form id="loginForm" novalidate>
+                
+                <div class="form-group">
+                    <label for="username">Tên truy cập</label>
+                    <div class="input-group">
+                        <span class="input-icon"><i class="ti ti-user"></i></span>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            placeholder="" 
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <div class="input-group">
+                        <span class="input-icon"><i class="ti ti-lock"></i></span>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="" 
+                            required
+                        >
+                        <button type="button" id="togglePassword" class="btn-toggle-pwd" aria-label="Hiển thị mật khẩu">
+                            <i class="ti ti-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="login-actions-row">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="rememberMe">
+                        <span class="checkmark"></span>
+                        Ghi nhớ tôi
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="btnLogin">
+                    <span>Đăng nhập</span>
+                    <i class="ti ti-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+  </body>
+</html>

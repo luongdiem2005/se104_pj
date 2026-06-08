@@ -1,0 +1,26 @@
+{
+  "name": "edufee-backend",
+  "version": "1.0.0",
+  "description": "Backend Hệ thống quản lý đăng ký môn học & thu học phí (EduFee)",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "node prisma/seed.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^6.9.1",
+    "prisma": "^5.22.0"
+  }
+}

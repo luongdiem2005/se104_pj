@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFee - Tra cứu Công nợ Học phí</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/form.css">
+    <link rel="stylesheet" href="../../assets/css/pdt_table.css">
+
+    <style>
+        .tuition-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .summary-card-financial {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .summary-card-financial::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        .card-total::before { background-color: #3182ce; }
+        .card-discount::before { background-color: #dd6b20; }
+        .card-paid::before { background-color: #38a169; }
+        .card-debt::before { background-color: #e53e3e; }
+
+        .summary-card-financial span {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .summary-card-financial h3 {
+            font-size: 22px;
+            color: #2d3748;
+            font-weight: 700;
+            font-family: monospace;
+        }
+        .invoice-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .invoice-header-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .policy-alert-box {
+            background-color: #ebf8ff;
+            border: 1px solid #bee3f8;
+            color: #2b6cb0;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+        .payment-action-panel {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-pay {
+            background-color: #3182ce;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-pay:hover {
+            background-color: #2b6cb0;
+            box-shadow: 0 4px 6px rgba(50, 130, 206, 0.2);
+        }
+    </style>
+    
+</head>
+<body class="dashboard-page">
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="ti ti-school"></i>
+                <h2>EduFee</h2>
+            </div>
+            <div class="sidebar-user-info">
+                <p class="role-badge" style="background: rgba(49, 130, 206, 0.2); color: #63b3ed;">Sinh viên</p>
+                <h3 id="sidebar-student-name">Sinh viên Loading...</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="sv.html"><i class="ti ti-edit-circle"></i><span>Đăng ký học phần</span></a></li>
+                    <li class="active"><a href="sv_hocphi.html"><i class="ti ti-wallet"></i><span>Tra cứu Học phí</span></a></li>
+                    <li><a href="sv_lsdk.html"><i class="ti ti-list-details"></i><span>Lịch sử đăng ký</span></a></li>
+                    <li><a href="sv_lsgd.html"><i class="ti ti-history"></i><span>Lịch sử giao dịch</span></a></li>
+                    <li><a href="sv_yeucau.html"><i class="ti ti-file-text"></i><span>Xin miễn giảm/Gia hạn</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Thông tin Học phí & Công nợ</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="btnLogout" class="btn-logout">
+                        <i class="ti ti-logout"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                
+                <div class="table-toolbar" style="padding: 0; margin-bottom: 20px;">
+                    <div class="filter-group">
+                        <select id="selectTuitionTerm" class="form-select" style="width: 260px;">
+                            <option value="2026-2027_HK1" selected>Học kỳ 1 - Năm học 2026-2027</option>
+                            <option value="2025-2026_HK2">Học kỳ 2 - Năm học 2025-2026</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tuition-summary-grid">
+                    <div class="summary-card-financial card-total">
+                        <span>Tổng học phí học phần</span>
+                        <h3 id="sumTotal">0 đ</h3>
+                    </div>
+                    <div class="summary-card-financial card-discount">
+                        <span>Miễn giảm chính sách</span>
+                        <h3 id="sumDiscount" style="color: #dd6b20;">-0 đ</h3>
+                    </div>
+                    <div class="summary-card-financial card-paid">
+                        <span>Số tiền đã thanh toán</span>
+                        <h3 id="sumPaid" style="color: #38a169;">0 đ</h3>
+                    </div>
+                    <div class="summary-card-financial card-debt">
+                        <span>Số tiền còn nợ đối chiếu</span>
+                        <h3 id="sumDebt" style="color: #e53e3e;">0 đ</h3>
+                    </div>
+                </div>
+
+                <div class="invoice-box">
+                    <div class="invoice-header-meta">
+                        <div>
+                            <h2 style="font-size: 18px; color: #2d3748; font-weight: 600; margin-bottom: 4px;">Phiếu thông báo học phí chi tiết</h2>
+                            <p style="font-size: 13px; color: #718096;">Trạng thái công nợ: <span id="paymentStatusBadge">-</span></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-size: 13px; color: #4a5568;">Mã hóa đơn: <strong id="invoiceIdOut" style="font-family: monospace;">INV-2026-001</strong></p>
+                            <p style="font-size: 12px; color: #a0aec0;" id="invoiceDateOut">Ngày lập: 04/06/2026</p>
+                        </div>
+                    </div>
+
+                    <div class="policy-alert-box" id="policyAlertBox">
+                        <i class="ti ti-info-circle" style="font-size: 20px;"></i>
+                        <div>
+                            Hệ thống phát hiện tài khoản sinh viên thuộc diện: <strong id="lblPolicyName">Chưa cấu hình diện miễn giảm</strong>. 
+                            Tỷ lệ áp dụng miễn giảm: <strong id="lblPolicyRate">0%</strong> học phí học phần.
+                        </div>
+                    </div>
+
+                    <div class="table-container" style="box-shadow: none; border: 1px solid #edf2f7;">
+                        <table class="data-table">
+<thead><tr><th>STT</th><th>Mã Lớp HP</th><th>Tên Môn Học</th><th>Số TC</th><th>Loại hình</th><th>Đơn giá/TC</th><th>Thành tiền</th></tr></thead>
+                            <tbody id="tuitionDetailTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div class="payment-action-panel" id="paymentPanel">
+                        <div>
+                            <h4 style="font-size: 14px; color: #2d3748; font-weight: 600; margin-bottom: 4px;">Thanh toán học phí trực tuyến</h4>
+                            
+                        </div>
+                        <button class="btn btn-pay" id="btnExecutePayment">
+                            <i class="ti ti-credit-card"></i>
+                            <span>Tiến hành thanh toán ngay</span>
+                        </button>
+                    </div>
+
+                </div>
+                <div id="shared-footer-container"></div>
+            </main>
+        </div>
+    </div>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth-guard.js"></script>
+    <script src="../../js/sv_hocphi.js"></script>
+  </body>
+</html>
