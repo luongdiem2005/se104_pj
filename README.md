@@ -149,7 +149,7 @@ cd backend
 Tạo file '.env' và cấu hình các biến môi trường cần thiết.
 
 ```env
-DATABASE_URL="mysql://root:password@localhost:3306/edufee"
+DATABASE_URL="mysql://root:password@localhost:3306/qlsv"
 PORT=3000
 JWT_SECRET=nhapmoncongnghephanmem
 ```
