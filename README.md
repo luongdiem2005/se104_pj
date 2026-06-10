@@ -137,8 +137,8 @@ QLSV/
 ### 1. Clone project
 
 ```bash
-git clone https://github.com/luongdiem2005/se104_pj.git
-cd se104_pj
+git clone https://github.com/luongdiem2005/SE104_QLDKHP-HP.git
+cd SE104_QLDKHP-HP
 ```
 
 ### 2. Cấu hình Backend
